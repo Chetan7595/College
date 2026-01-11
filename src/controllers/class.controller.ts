@@ -71,6 +71,14 @@ export const addStudent = async (req: Request, res: Response) => {
             });
         }
 
+        const studentDb = await UserModel.findById(data.studentId);
+        if (!studentDb) {
+            return res.status(404).json({
+                success: false,
+                error: "Student not found",
+            });
+        }
+
         const updatedClass = await ClassModel.findByIdAndUpdate(
             id,
             { $addToSet: { studentIds: data.studentId } },
@@ -111,7 +119,7 @@ export const getClassById = async (req: Request, res: Response) => {
         ) {
             return res.status(403).json({
                 success: false,
-                error: "Forbidden, not class member",
+                error: "Forbidden, not class teacher",
             });
         }
 
@@ -156,13 +164,22 @@ export const myAttendance = async (req: Request, res: Response) => {
         ) {
             return res.status(403).json({
                 success: false,
-                error: "Forbidden, not a class student",
+                error: "Forbidden, not enrolled in class",
             });
         }
         const attendanceRecord = await AttendanceModel.findOne({
             classId: new Types.ObjectId(id),
             studentId: new Types.ObjectId(req.userId),
         });
+        if (!attendanceRecord) {
+            return res.json({
+                success: true,
+                data: {
+                    classId: req.userId,
+                    status: null,
+                },
+            });
+        }
         res.json({
             success: true,
             data: {

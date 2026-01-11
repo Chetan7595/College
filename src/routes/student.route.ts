@@ -1,9 +1,12 @@
 import { Router } from "express";
 import { getStudents } from "../controllers/student.controller.js";
-import { teacherRoleMiddleWare } from "../middleware/auth.middleware.js";
+import {
+    authMiddleware,
+    teacherRoleMiddleWare,
+} from "../middleware/auth.middleware.js";
 
 const router = Router();
 
-router.get("/", teacherRoleMiddleWare, getStudents);
+router.get("/", authMiddleware, teacherRoleMiddleWare, getStudents);
 
 export default router;
