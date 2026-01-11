@@ -1,0 +1,18 @@
+# Compiled JS
+*.js
+*.js.map
+
+# Type declarations
+*.d.ts
+*.d.ts.map
+
+# Build output (recommended)
+dist/
+build/
+out/
+node_modules/
+
+.env
+.env.local
+
+package-lock.json
