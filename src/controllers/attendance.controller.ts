@@ -1,8 +1,7 @@
 import type { Request, Response } from "express";
 import { attendanceStartSchema } from "../schemas/attendance.schema.js";
 import { ClassModel } from "../models/Class.js";
-
-let activeSession = null;
+import { startSession } from "../store/attendanceSession.js";
 
 export const startAttendance = async (req: Request, res: Response) => {
     try {
@@ -33,11 +32,7 @@ export const startAttendance = async (req: Request, res: Response) => {
 
         const startedAt = new Date().toISOString();
 
-        (global as any).activeSession = {
-            classId: data.classId,
-            startedAt,
-            attendance: {},
-        };
+        startSession(data.classId, startedAt);
 
         res.json({
             success: true,
